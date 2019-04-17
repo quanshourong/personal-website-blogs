@@ -33,6 +33,7 @@ import com.rong.base.utils.UserUtil;
  * @param <ID> 数据库实体的主键实体
  */
 @Service
+@Transactional(readOnly = true)
 public abstract class BaseService<T, ID extends Serializable> {
 
 	@Autowired
@@ -63,6 +64,7 @@ public abstract class BaseService<T, ID extends Serializable> {
 	 *            实体
 	 * @return 返回保存的实体
 	 */
+	@Transactional(readOnly = false)
 	public T save(T t) {
 		UserUtil.stamp(t);
 		return baseRepository.save(t);
@@ -75,6 +77,7 @@ public abstract class BaseService<T, ID extends Serializable> {
 	 *            实体
 	 * @return 返回保存的实体
 	 */
+	@Transactional(readOnly = false)
 	public List<T> save(List<T> tlist) {
 		tlist.forEach(t -> {
 			UserUtil.stamp(t);
@@ -90,6 +93,7 @@ public abstract class BaseService<T, ID extends Serializable> {
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 */
+	@Transactional(readOnly = false)
 	public void delete(ID id) throws IllegalAccessException, InvocationTargetException {
 		T t = findOne(id).get();
 		BeanUtils.setProperty(t, "isActive", Boolean.FALSE);
@@ -104,6 +108,7 @@ public abstract class BaseService<T, ID extends Serializable> {
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 */
+	@Transactional(readOnly = false)
 	public void delete(T t) throws IllegalAccessException, InvocationTargetException {
 		BeanUtils.setProperty(t, "isActive", Boolean.FALSE);
 		save(t);
@@ -115,6 +120,7 @@ public abstract class BaseService<T, ID extends Serializable> {
 	 * @param t
 	 *            实体
 	 */
+	@Transactional(readOnly = false)
 	public void delete(List<T> t) {
 		t.forEach(a -> {
 			try {

@@ -5,8 +5,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
@@ -20,17 +18,18 @@ import com.rong.dto.UserSearchDto;
 import com.rong.entity.User;
 import com.rong.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 用户业务管理
  * 
  * @author qsr
  *
  */
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class UserService extends BaseService<User, Integer> {
-
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Resource
 	private UserRepository userRepository;
@@ -75,10 +74,9 @@ public class UserService extends BaseService<User, Integer> {
 		UserSearchDto searchDto = new UserSearchDto();
 		mapper(searchParams, searchDto);
 		Map<String, Object> searchmap = searchDto.getSearchParams();
-		logger.info("用户管理的搜索的条件是={},排序的字段为={}", searchmap, pageInfo.getSortType());
-		Page<User> page = getPage(searchmap, pageInfo.getNumber(), pageInfo.getSize(), Direction.DESC,
+		log.info("用户管理的搜索的条件是={},排序的字段为={}", searchmap, pageInfo.getSortType());
+		return getPage(searchmap, pageInfo.getNumber(), pageInfo.getSize(), Direction.DESC,
 				pageInfo.getSortType().split(","));
-		return page;
 	}
 
 	/**
@@ -91,8 +89,8 @@ public class UserService extends BaseService<User, Integer> {
 	public List<User> getByParam(Map<String, Object> searchParams) {
 		UserSearchDto searchDto = new UserSearchDto();
 		mapper(searchParams, searchDto);
-		logger.info("用户管理的搜索的参数是={}", searchDto);
-		return findAll(PageUtils.buildSpec(searchDto.getSearchParams()));
+		log.info("用户管理的搜索的参数是={}", searchDto);
+		return findAll(searchDto.getSearchParams(), Direction.DESC, "id");
 	}
 
 	public User details(Integer id) {

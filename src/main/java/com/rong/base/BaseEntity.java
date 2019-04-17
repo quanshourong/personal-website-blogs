@@ -34,12 +34,15 @@ public abstract class BaseEntity implements Serializable, IConstants {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected Integer id;
 
-	/** 实体创建时间*/
+	/** 实体创建时间 */
 	protected Date created = new Date();
 
-	/** 实体更新时间*/
-	protected Date modified; 
+	/** 实体更新时间 */
+	protected Date modified;
 
-	/** 实体删除标记，为false表示删除*/
+	/** 实体删除标记，为false表示删除 */
 	protected Boolean isActive = Boolean.TRUE;
+
+	/** 备注信息 */
+	protected String description;
 }

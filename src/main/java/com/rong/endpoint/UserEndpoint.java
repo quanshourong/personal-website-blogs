@@ -79,7 +79,7 @@ public class UserEndpoint extends BaseEndpoint {
 		Map<String, Object> searchParams = PageUtils.getParamStartWith(request, SEARCH_PREFIX1);
 		PageInfo pageInfo = new PageInfo(pageNumber, pageSize, sortType);
 		Page<User> page = userService.getPageList(searchParams, pageInfo);
-		return page(pageNumber, pageSize, sortType, request, this.getClass(), page);
+		return doPageInfo(pageNumber, pageSize, sortType, request, this.getClass(), page);
 	}
 
 	/**

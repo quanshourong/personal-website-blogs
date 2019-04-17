@@ -33,6 +33,10 @@ import com.rong.base.utils.IConstants;
  */
 public abstract class BaseEndpoint implements IConstants {
 
+	/**
+	 * 转换传递进来的参数，
+	 * @param binder
+	 */
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
 		// String类型转换，将所有传递进来的String进行HTML编码，防止XSS攻击
@@ -71,7 +75,7 @@ public abstract class BaseEndpoint implements IConstants {
 	 * 统一构造hal链接
 	 * 
 	 * @param controllerClass
-	 *            控制器class，带有@Controller
+	 *            控制器class，带有@Controller，并且是BaseEndpoint的子类
 	 * @param id
 	 *            主键字段
 	 * @return
@@ -83,7 +87,7 @@ public abstract class BaseEndpoint implements IConstants {
 	}
 
 	// 咨询信息分页列表
-	public HttpEntity<PagedResources<Resource<?>>> page(int pageNumber, int pageSize, String sortType,
+	public HttpEntity<PagedResources<Resource<?>>> doPageInfo(int pageNumber, int pageSize, String sortType,
 			ServletRequest request, Class<?> controllerClass, Page<? extends BaseEntity> page) {
 
 		List<Resource<?>> list = Lists.newArrayList();

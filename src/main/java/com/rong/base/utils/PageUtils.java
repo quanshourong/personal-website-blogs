@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.TreeMap;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -18,15 +17,15 @@ import javax.persistence.criteria.Root;
 import javax.servlet.ServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class PageUtils<T> {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(PageUtils.class);
 
 	/**
 	 * 取得带相同前缀的Request Parameters, copy from spring WebUtils.
@@ -34,9 +33,9 @@ public class PageUtils<T> {
 	 * 返回的结果的Parameter名已去除前缀.
 	 */
 	public static Map<String, Object> getParamStartWith(ServletRequest request, String prefix) {
-		LOGGER.debug("根据条件获取搜索参数开始...");
+		log.debug("根据条件获取搜索参数开始...");
 		Enumeration<String> paramNames = request.getParameterNames();
-		Map<String, Object> params = new TreeMap<String, Object>();
+		Map<String, Object> params = Maps.newTreeMap();
 		prefix = Optional.ofNullable(prefix).orElseGet(() -> "");
 		while (paramNames != null && paramNames.hasMoreElements()) {
 			String paramName = paramNames.nextElement();
@@ -89,7 +88,7 @@ public class PageUtils<T> {
 	}
 
 	/**
-	 * 构造一般搜索标准查询，涉及Validate状态值
+	 * 构造一般搜索标准查询
 	 * 
 	 * @param searchParams
 	 * @return
@@ -97,10 +96,6 @@ public class PageUtils<T> {
 	public static <T> Specification<T> buildSpec(Map<String, Object> searchParams) {
 
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-		// filters.put("validated", new SearchFilter("validated",Operator.NE,
-		// Validated.DEL));
-		// 枚举变量过滤
-		// filters = enumFilter(searchParams, filters);
 		return bySearchFilter(filters.values());
 	}
 
@@ -112,17 +107,13 @@ public class PageUtils<T> {
 	 */
 	public static <T> Specification<T> buildSpecIn(Map<String, Object> searchParams) {
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-		// filters.put("validated", new SearchFilter("validated", Operator.EQ,
-		// Validated.DEL));
-		// 枚举变量过滤
-		// filters = enumFilter(searchParams, filters);
 		return bySearchFilter(filters.values());
 	}
 
 	/**
 	 * 实现复杂对象查询，实现toPredicate方法，用JPA去构造Specification对象查询；
 	 * 
-	 * @author linjiaqi
+	 * @author qsr
 	 *
 	 */
 	public static <T> Specification<T> bySearchFilter(final Collection<SearchFilter> filters) {
@@ -135,7 +126,7 @@ public class PageUtils<T> {
 			// Root 查询中的条件表达式
 			// CriteriaQuery 条件查询设计器
 			// CriteriaBuilder 条件查询构造器
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 				if (StringUtils.isNotEmpty(filters.toString())) {
 					// 保存查询条件集
@@ -202,18 +193,6 @@ public class PageUtils<T> {
 				return builder.conjunction();
 			}
 		};
-	}
-
-	/**
-	 * 根据枚举类别及index值，找出对应字段
-	 *
-	 * @param clazz
-	 * @param index
-	 * @return
-	 */
-	public static <T> T getEnumType(Class<T> clazz, int index) {
-		T[] c = clazz.getEnumConstants();
-		return c[index];
 	}
 
 }

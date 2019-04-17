@@ -55,9 +55,9 @@ public class SearchFilter {
 	/**
 	 * 使用：IN, BETWEEN_DATE, BETWEEN_LONG 时调用
 	 * 
-	 * @param fieldName
-	 * @param operator
-	 * @param values
+	 * @param fieldName 搜索的字段名
+	 * @param operator 搜索的方式
+	 * @param values 搜索的值
 	 */
 	public SearchFilter(String fieldName, Operator operator, Object... values) {
 		this.fieldName = fieldName;

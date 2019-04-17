@@ -1,15 +1,13 @@
 package com.rong.base.utils;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 import java.util.Date;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.slf4j.Logger;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class UserUtil {
-
-	private static final Logger LOGGER = getLogger(UserUtil.class);
 
 	/**
 	 * 获取当前操作用户
@@ -32,7 +30,7 @@ public class UserUtil {
 		try {
 			BeanUtils.setProperty(bean, "modified", new Date());
 		} catch (Exception e) {
-			LOGGER.error("记录更新时间戳失败，原因={}", e.getMessage());
+			log.error("记录更新时间戳失败，原因={}", e.getMessage());
 		}
 	}
 
